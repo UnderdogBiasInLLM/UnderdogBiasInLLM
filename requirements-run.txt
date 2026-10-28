@@ -1,0 +1,4 @@
+# Rebuilding samples and prompts (src/build, src/prompts) and re-running the model calls (src/run);
+# in addition to requirements.txt
+requests>=2.32
+pillow>=10  # duplicate-image check for the five marketplace disputes with more than 100 images

@@ -1,0 +1,12 @@
+# Local model runs: raw responses and re-read decisions (never committed)
+runs/
+
+# Downloaded source data and extracted images
+data/raw/
+
+# Generated tables and reports (reproduce.py)
+output/
+
+__pycache__/
+*.pyc
+.env

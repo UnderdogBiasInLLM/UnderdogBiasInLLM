@@ -1,0 +1,199 @@
+{
+  "description": "Supervised fine-tuning (manuscript Section 6.3, Appendix B.4): standard SFT (M1) and targeted SFT (M2), each trained from the post-trained base model; C0 = base model without fine-tuning, evaluated on the same held-out test units.",
+  "base_model": "Qwen/Qwen3.5-9B",
+  "base_model_note": "post-trained (instruction) checkpoint, not the pretrained Base checkpoint",
+  "training_framework": "LLaMA-Factory SFT stage with a custom per-example weighted loss",
+  "software": {
+    "housing": {
+      "llamafactory": "0.9.5",
+      "torch": "2.8.0+cu128",
+      "transformers": "5.6.0",
+      "accelerate": "1.11.0",
+      "peft": "0.18.1",
+      "bitsandbytes": "0.50.2"
+    },
+    "labor": {
+      "llamafactory": "0.9.5",
+      "torch": "2.8.0+cu128",
+      "transformers": "5.6.0",
+      "accelerate": "1.11.0",
+      "peft": "0.18.1",
+      "bitsandbytes": "0.50.2"
+    }
+  },
+  "quantization": {
+    "method": "bitsandbytes",
+    "bits": 4,
+    "type": "nf4",
+    "double_quantization": true,
+    "compute_dtype": "bfloat16"
+  },
+  "lora": {
+    "rank": 16,
+    "alpha": 32,
+    "dropout": 0.0,
+    "bias": "none",
+    "target": "all linear layers of the language model",
+    "target_modules": [
+      "down_proj",
+      "gate_proj",
+      "in_proj_a",
+      "in_proj_b",
+      "in_proj_qkv",
+      "in_proj_z",
+      "k_proj",
+      "o_proj",
+      "out_proj",
+      "q_proj",
+      "up_proj",
+      "v_proj"
+    ],
+    "frozen": [
+      "vision tower",
+      "multimodal projector"
+    ]
+  },
+  "optimizer": {
+    "optimizer": "Hugging Face Trainer default AdamW (optim not overridden)",
+    "learning_rate": 5e-05,
+    "lr_scheduler": "linear",
+    "warmup_ratio": 0.05,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0,
+    "bf16": true,
+    "gradient_checkpointing": true
+  },
+  "sequence": {
+    "max_length_tokens": 16384,
+    "truncation": false,
+    "packing": false,
+    "train_on_prompt": false,
+    "thinking": "disabled"
+  },
+  "prompt": "the C0 case material and binary decision rule; the multi-field output request is replaced by a one-field decision (housing complaint_outcome UPHELD/NOT_UPHELD; labor verdict EMPLOYEE/EMPLOYER)",
+  "loss": "mean over examples of (normalized sample weight x per-example mean answer-token cross-entropy)",
+  "sample_weights": {
+    "M1": "all training units weight 1",
+    "M2": "raw weight 2 for training units whose real outcome favors the stronger party and on which C0 favors the underdog (column m2_upweighted), else 1; divided by the training-set mean",
+    "m2_upweighted_units": {
+      "housing": 2191,
+      "labor": 591
+    },
+    "normalized_weight_sum": {
+      "housing": 16011.0,
+      "labor": 3854.0
+    }
+  },
+  "splits": {
+    "policy": "70/15/15 of label-blind connected groups (same report or source case, or linked duplicates) ranked by seeded SHA-256; no class balancing; each housing report and each labor source case lies in a single split",
+    "housing_heads": {
+      "train": 16011,
+      "val": 3454,
+      "test": 3414
+    },
+    "housing_test_reports": 1964,
+    "labor_pleas": {
+      "train": 3854,
+      "val": 873,
+      "test": 835
+    },
+    "labor_source_cases": {
+      "train": 2340,
+      "val": 517,
+      "test": 502
+    }
+  },
+  "settings": {
+    "housing": {
+      "epochs": 1,
+      "per_device_batch_size": 1,
+      "gradient_accumulation_steps": 32,
+      "effective_batch_size": 32,
+      "total_steps": 501,
+      "checkpoint_and_validation_loss_every_steps": 100,
+      "candidate_checkpoints": [
+        100,
+        200,
+        300,
+        400,
+        500,
+        501
+      ],
+      "seed": 20260930,
+      "selected_checkpoint": {
+        "M1": 500,
+        "M2": 501
+      },
+      "selected_validation_metrics_report_equal": {
+        "M1": {
+          "validation_agreement": 0.8644525751177147,
+          "validation_asymmetry": 0.15218600484397227,
+          "validation_balanced_agreement": 0.8403129956679114
+        },
+        "M2": {
+          "validation_agreement": 0.8621418054139786,
+          "validation_asymmetry": 0.03925765690811964,
+          "validation_balanced_agreement": 0.8559147983451059
+        }
+      }
+    },
+    "labor": {
+      "epochs": 3,
+      "per_device_batch_size": 1,
+      "gradient_accumulation_steps": 16,
+      "effective_batch_size": 16,
+      "total_steps": 723,
+      "checkpoint_and_validation_loss_every_steps": 61,
+      "checkpoint_frequency": "every quarter epoch",
+      "candidate_checkpoints": [
+        61,
+        122,
+        183,
+        244,
+        305,
+        366,
+        427,
+        488,
+        549,
+        610,
+        671,
+        723
+      ],
+      "seed": 20261015,
+      "selected_checkpoint": {
+        "M1": 488,
+        "M2": 488
+      },
+      "selected_validation_metrics_plea_equal": {
+        "M1": {
+          "validation_agreement": 0.8602520045819015,
+          "validation_asymmetry": 0.4044381934677293,
+          "validation_balanced_agreement": 0.7330832942647288
+        },
+        "M2": {
+          "validation_agreement": 0.852233676975945,
+          "validation_asymmetry": 0.2809032661353337,
+          "validation_balanced_agreement": 0.7639084231911236
+        }
+      }
+    }
+  },
+  "checkpoint_selection": {
+    "data": "validation split only; test labels used only for the final evaluation",
+    "M1": "highest validation agreement (ties: earliest step)",
+    "M2": "smallest absolute validation underdog overturn asymmetry among M2 checkpoints whose validation agreement is no more than 1 percentage point below the selected M1 (ties: higher agreement, then earliest step)",
+    "validation_weights": "housing report-equal; labor plea-equal"
+  },
+  "inference": {
+    "decoding": "greedy",
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "max_new_tokens": 128,
+    "thinking": "disabled",
+    "decision_rule": "first unique explicit decision (paper Appendix A.1)"
+  },
+  "evaluation_weights": {
+    "housing": "1 / number of heads in the report; report clusters",
+    "labor": "plea-equal; source-case clusters"
+  }
+}
