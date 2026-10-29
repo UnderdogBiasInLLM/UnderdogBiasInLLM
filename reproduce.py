@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from src.analysis import estimators as est  # noqa: E402
 from src.analysis.data import MODELS, arrays, load_posttraining, terciles  # noqa: E402
 from src.analysis.figures import vote_split_figure  # noqa: E402
-from src.analysis.tables import Results, all_tables, num  # noqa: E402
+from src.analysis.tables import Results, all_tables, num, stars  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / 'output'
@@ -50,6 +50,12 @@ def inline_values(R):
     g, _ = terciles(dv.record_length_chars)
     v['divorce_shortest_tercile_mean_statement_chars_female_male'] = [
         round(dv.female_statement_chars[g == 0].mean()), round(dv.male_statement_chars[g == 0].mean())]
+    # Section 4.1 and Appendix A.2: C0 asymmetry in claims where the female spouse is the defendant
+    s = (dv.female_plaintiff == 0).to_numpy()
+    real, w, cl = arrays(dv, s)
+    for m in MODELS:
+        a = est.overturn_asymmetry(real, dv.loc[s, f'{m}|C0'], w, cl)['asym']
+        v[f'divorce_female_defendant_asymmetry_{m}'] = [num(a['est']), num(a['se']), stars(a['p'])]
     # Appendix B.2: equivalence test (90% case-clustered interval of residual MASK asymmetry)
     real, w, cl = arrays(dv)
     r = est.treatment_asymmetry(real, dv['Qwen|C0'], dv['Qwen|MASK'], w, cl)['treat']
