@@ -5,7 +5,7 @@ the frozen model decisions, and contains the code that builds the four samples,
 constructs the exact prompts of every experimental condition, calls the four models, and
 reads their decisions.
 
-The paper compares large language models' decisions with the real outcomes of four
+The paper compares large language models' decisions with the institutional outcomes of four
 dispute settings: retail marketplace disputes (VerdictBench), housing complaints
 (Housing Ombudsman Service), labor-service disputes (CPEE), and divorce-property
 disputes (China Judgments Online). No case text is included; see
@@ -69,7 +69,7 @@ constructed sample.
 | `unit_id` | Dispute (marketplace), complaint head (housing), plea (labor), or claim (divorce property) identifier |
 | `cluster_id` | Inference cluster: dispute, report, or source case |
 | `weight` | 1, except housing: 1 / number of complaint heads in the report |
-| `real_underdog` | 1 if the real outcome favors the underdog (buyer, resident, employee, female spouse) |
+| `real_underdog` | 1 if the institutional outcome favors the underdog (buyer, resident, employee, female spouse) |
 | other columns | Numeric features used in the analyses (juror votes, record length in non-whitespace characters, litigation role, and so on) |
 
 `decisions/decisions_<setting>.csv`: one row per unit, model, and condition.
@@ -137,7 +137,7 @@ settings are text only.
 ```
 reproduce.py            Level 1 entry point
 expected/               Values printed in the paper, used by reproduce.py
-data/derived/           Samples: identifiers, real outcomes, numeric features
+data/derived/           Samples: identifiers, institutional outcomes, numeric features
 data/download/          How to obtain each source dataset
 decisions/              Frozen model decisions
 posttraining/           Pretrained/post-trained and fine-tuning results

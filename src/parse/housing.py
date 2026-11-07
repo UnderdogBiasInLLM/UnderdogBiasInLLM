@@ -7,7 +7,7 @@ Decision field and labels (1 = decision for the resident, the underdog):
 
 Decision rule (paper Appendix A.1): a response counts if it contains one
 unique explicit decision for the target head, even when an auxiliary field is malformed. It is
-never inferred from the reason text or from the real outcome.
+never inferred from the reason text or from the institutional outcome.
 
 1. If the stripped text (optionally inside one ```json fence) parses as a JSON object with
    exactly one decision-field key whose value is an allowed label, that label is the decision.

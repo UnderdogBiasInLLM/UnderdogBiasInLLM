@@ -74,7 +74,7 @@
   "loss": "mean over examples of (normalized sample weight x per-example mean answer-token cross-entropy)",
   "sample_weights": {
     "M1": "all training units weight 1",
-    "M2": "raw weight 2 for training units whose real outcome favors the stronger party and on which C0 favors the underdog (column m2_upweighted), else 1; divided by the training-set mean",
+    "M2": "raw weight 2 for training units whose institutional outcome favors the stronger party and on which C0 favors the underdog (column m2_upweighted), else 1; divided by the training-set mean",
     "m2_upweighted_units": {
       "housing": 2191,
       "labor": 591

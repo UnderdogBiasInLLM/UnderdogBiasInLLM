@@ -19,7 +19,7 @@ Screening (Appendix C.1 of the paper), applied to the pooled train/val/test part
 4. parsed transaction price in RMB, 0 < price < 1,000,000         (-> 5,489)
 
 Each retained dispute is one adjudication unit and its own inference cluster. The
-real outcome is the 17-juror majority (buyer = underdog, seller = stronger party).
+institutional outcome is the 17-juror majority (buyer = underdog, seller = stronger party).
 
 ``load_records`` returns the pre-decision material a prompt needs: claims, product
 information, chat messages and dispute-handling evidence truncated before the first
@@ -309,7 +309,7 @@ def screening_counts(screened):
 
 
 def build_units(raw_dir):
-    """The 5,489 retained disputes with real outcome (17-juror majority) and vote counts.
+    """The 5,489 retained disputes with institutional outcome (17-juror majority) and vote counts.
 
     Columns: unit_id, cluster_id (= unit_id), weight (1), real_underdog (1 if the
     majority favors the buyer), buyer_votes, seller_votes, bilateral_opinion (1 if

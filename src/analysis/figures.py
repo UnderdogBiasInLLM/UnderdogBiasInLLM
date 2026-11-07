@@ -14,7 +14,7 @@ STYLE = {'font.family': 'serif', 'font.serif': ['DejaVu Serif'], 'font.size': 10
 
 def vote_split_figure(d, path_stem):
     """Buyer-support rate with 95% Wilson intervals by the number of buyer-supporting
-    jurors (out of 17), the real outcome (17-juror majority) as a dashed step, and group
+    jurors (out of 17), the institutional outcome (17-juror majority) as a dashed step, and group
     sizes in the lower panel. Returns the per-vote summary."""
     plt.rcParams.update(STYLE)
     s = (d.assign(qwen=d['Qwen|C0'].astype(int))
@@ -28,7 +28,7 @@ def vote_split_figure(d, path_stem):
     ax.errorbar(s.buyer_votes, 100 * p, yerr=np.vstack([100 * (p - center + half), 100 * (center + half - p)]),
                 fmt='o-', color='black', lw=1, ms=3.5, capsize=2, label='Qwen buyer support (95% CI)')
     ax.step([-.5, 8.5, 17.5], [0, 100, 100], where='post', color='.55', ls='--',
-            label='Real outcome (platform majority)')
+            label='Institutional outcome')
     ax.set_ylim(-4, 105)
     ax.set_yticks([0, 25, 50, 75, 100])
     ax.set_ylabel('Buyer support (%)')

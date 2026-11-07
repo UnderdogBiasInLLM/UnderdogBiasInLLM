@@ -19,7 +19,7 @@ Screening chain (counts printed by ``python -m src.build.labor <raw_dir>``):
 
 Each retained plea is one adjudication unit; pleas from the same source record form one
 cluster. Plaintiff = employee (underdog), defendant = employer (stronger party); a fully
-granted plea is a real outcome for the employee (``real_underdog = 1``).
+granted plea is an institutional outcome for the employee (``real_underdog = 1``).
 """
 import hashlib
 import json

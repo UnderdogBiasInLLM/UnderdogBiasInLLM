@@ -61,7 +61,7 @@ def mean_estimate(values, weight, cluster):
 # ---------------------------------------------------------------- Equation (3)
 def overturn_asymmetry(real, decision, weight, cluster):
     """Equation (3): O_im = alpha + Delta^U G_i + e, with O = disagreement with the
-    real outcome and G_i = 1 when the real outcome favors the stronger party.
+    institutional outcome and G_i = 1 when it favors the stronger party.
 
     p^U = alpha + Delta^U (stronger-party wins overturned toward the underdog),
     p^S = alpha (underdog wins overturned toward the stronger party).
@@ -94,7 +94,7 @@ def treatment_asymmetry(real, d0, dt, weight, cluster):
 def within_fe(responses, weight, cluster):
     """Stack k+1 decisions per unit (column 0 is the omitted reference), absorb the
     unit fixed effect by within transformation, and regress on the k condition
-    indicators. Used for Equation (1) (reference = real outcome), Equation (A.2)
+    indicators. Used for Equation (1) (reference = institutional outcome), Equation (A.2)
     (reference = C0) and Equation (B.1) (reference = C0). Returns one coefficient per
     non-reference column and the within R^2."""
     y = np.asarray(responses, float)

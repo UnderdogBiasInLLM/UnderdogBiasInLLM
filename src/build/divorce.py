@@ -46,7 +46,7 @@ The construction runs in five stages (counts printed by
 Claim-level outcomes are extracted from the court's reasoning and disposition by the rules
 below.
 
-The real outcome is the court's claim-level ruling mapped to the spouses through the
+The institutional outcome is the court's claim-level ruling mapped to the spouses through the
 plaintiff's sex: ``FULLY_UPHELD`` favors the plaintiff and ``DENIED`` the defendant, so
 ``real_underdog = 1`` exactly when the favored party is the female spouse. Unit = claim
 (``unit_id``), cluster = source case (``cluster_id``), weight 1.
